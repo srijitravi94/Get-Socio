@@ -1,0 +1,191 @@
+.profile-pic {
+  margin-top: 80px;
+  text-align: center;
+  color: black;
+}
+
+@media (min-width: 576px){
+  .fixed {
+    width: 70%;
+    height : 100%;
+    position: fixed;
+    overflow: auto;
+  }
+}
+
+.text-center {
+  text-align : center;
+  margin: auto;
+}
+
+.post-form, .card {
+  margin-top: 30px;
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-bottom: 30px;
+}
+
+#caption {
+  margin-bottom: 20px;
+}
+
+.card-header, .card-body {
+  color: black;
+}
+
+.card-text {
+  white-space: pre-wrap;
+}
+
+.btn {
+  border-radius: 5px;
+}
+
+.update-btn, .delete-btn {
+  margin-right: 10px;
+}
+
+.fa {
+  font-size: large;
+}
+
+.btn-center {
+  text-align: center;
+  margin: 0 auto;
+}
+
+@media (min-width: 576px) {
+  .d-sm-block {
+    display: inline !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .d-md-block {
+    display: inline !important;
+  }
+}
+
+.submit-comment {
+  border: 1px solid black;
+}
+
+.comment-box {
+  word-break: break-all;
+}
+
+.comment-box img {
+  width: 50px;
+  height: 50px;
+}
+
+.comment-box .media-left {
+  padding-right: 10px;
+  width: 65px;
+}
+
+.comment-box .media-body p {
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+.comment-box .media-body .media p {
+  margin-bottom: 0;
+}
+
+.comment-box .media-heading {
+  background-color: #ddd;
+  border: 1px solid #ddd;
+  padding: 7px 10px;
+  position: relative;
+  margin-bottom: -1px;
+}
+
+.comment-box .media-heading:before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  background-color: #ddd;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  position: absolute;
+  top: 10px;
+  left: -6px;
+}
+
+.list-group-item-dark {
+  background-color: rgba(0,0,0,0.03) !important;
+}
+
+.private-user {
+  margin-top: 100px;
+}
+
+.no-user {
+  margin-top: 100px;
+}
+
+.fa-circle {
+  color: #2c3e50;
+}
+
+.shared-image {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.people-like {
+  color: #2c3e50;
+}
+
+.small-image {
+  height: 50px;
+  width: 50px;
+}
+
+.media-body {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.timeline {
+  margin-top: 60px;
+}
+
+.section {
+  margin-top: 20px;
+}
+
+.people {
+  margin-top: 20px;
+}
+
+.like-modal{
+  height: 350px;
+  overflow-y: auto;
+}
+
+.list-group-item {
+  border-color: black;
+  color: black;
+}
+
+.list-group-item:hover {
+  background-color: #ced4da;
+}
+
+.small-menu {
+  margin-top: 20px;
+}
+
+.user-form {
+  margin-top: 100px;
+  margin-left: 25%;
+  margin-right: 25%;
+}
+
+.small-image-suggestions {
+  margin-top: 20px;
+  height: 30px;
+  width: 30px;
+}

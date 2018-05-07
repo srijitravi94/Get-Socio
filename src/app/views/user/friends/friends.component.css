@@ -1,0 +1,21 @@
+.friend-list {
+  margin-top: 100px;
+}
+
+.fa-circle {
+  color: #2c3e50;
+}
+
+.friends-list {
+  margin-top: 30px;
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-bottom: 30px;
+}
+
+.small-image {
+  margin-left: -50px;
+  margin-right: 20px;
+  height: 50px;
+  width: 50px;
+}

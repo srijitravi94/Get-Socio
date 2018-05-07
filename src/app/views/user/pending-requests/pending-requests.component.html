@@ -1,0 +1,41 @@
+<app-header></app-header>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3">
+      <app-sidemenu></app-sidemenu>
+    </div>
+    <div class="col-sm-9 pending-req" *ngIf="pendingRequests.length > 0">
+      <ul class="list-group list-group-flush pending-friend-list">
+        <li class="list-group-item" *ngFor="let user of pendingRequests">
+          <div class="float-left">
+            <a routerLink="/profile/{{user.username}}" target="_blank">
+              <img class="small-image img-responsive rounded-circle" src="{{user.image}}">
+            </a>
+            <a routerLink="/profile/{{user.username}}" target="_blank">
+            {{user.firstName}} &nbsp; {{user.lastName}}
+            </a>
+          </div>
+          <div class="float-right">
+            <button class="btn btn-success"
+                    (click)="acceptFriendRequest(user._id)">
+              Accept
+            </button>
+            <button class="btn btn-danger"
+                    (click)="deleteFriendRequest(user._id)">
+              Cancel
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="col-sm-9 pending-req" *ngIf="pendingRequests.length === 0">
+      <div class="text-center">
+          <span class="fa-stack fa-4x">
+              <i class="fas fa-circle fa-stack-2x"></i>
+              <i class="fas fa-check fa-stack-1x fa-inverse"></i>
+          </span><br><br>
+        <h4>All caught up</h4>
+      </div>
+    </div>
+  </div>
+</div>

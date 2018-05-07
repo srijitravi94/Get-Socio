@@ -1,0 +1,317 @@
+<form class="user-form">
+  <input type="text" class="form-control" placeholder="Search for people" aria-label="Number" matInput [formControl]="searchUser" [matAutocomplete]="auto">
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let user of searchResult" routerLink="/profile/{{user.username}}">
+      <div class="media">
+        <img class="small-image-suggestions img-responsive rounded-circle" src="{{user.image}}">
+        <div class="media-body">
+          {{user.firstName}} {{user.lastName}}
+        </div>
+      </div>
+    </mat-option>
+  </mat-autocomplete>
+</form>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="col-sm-3 fixed text-center">
+        <div class="profile-pic">
+          <img src={{user?.image}}
+               class="img-fluid">
+        </div>
+        <div class="small-menu">
+          <a class="list-group-item d-flex justify-content-between align-items-center"
+             routerLink="/profile/{{user?.username}}">
+            Profile
+          </a>
+          <a class="list-group-item d-flex justify-content-between align-items-center"
+             data-toggle="modal" href="#logoutModal">
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-9 timeline">
+      <div class="card border-primary" *ngFor="let post of postsOfFriends">
+        <h6 class="card-header">
+          <div>
+            <div class="media">
+              <a routerLink="/profile/{{user?.username}}" target="_blank">
+                <img class="small-image img-responsive rounded-circle" src="{{post.image}}">
+              </a>
+              <div class="media-body">
+                  <span *ngIf="!post.isShared">
+                    <a routerLink="/profile/{{post.username}}" target="_blank">{{post.firstName}} {{post.lastName}}</a>
+                  </span>
+                <span *ngIf="post.isShared">
+                    <a routerLink="/profile/{{post.username}}">{{post.firstName}} {{post.lastName}}</a> shared <a routerLink="/profile/{{post.sharedFrom}}" target="_blank">{{post.sharedFrom}}'s</a> post
+                </span>
+              </div>
+            </div>
+          </div>
+        </h6>
+        <div class="card-body comment-box">
+          <h5 class="card-title">{{post.postCaption}}</h5>
+          <hr>
+          <p class="card-text" *ngIf="post.type !== 'IMAGE'">{{post.postContent}}</p>
+
+          <div class="card-text"
+               *ngIf="post.type === 'IMAGE'">
+            <img [src]=post.postContent
+                 class="img-fluid shared-image">
+          </div>
+
+        </div>
+        <div class="card-header">
+          <div class="row">
+            <div class="col-4 form-group text-center">
+              <button class="btn btn-success btn-sm"
+                      (click)="likePost(post._id, loggedInUser._id)"
+                      *ngIf="post.likedBy.indexOf(loggedInUser._id) < 0">
+                <span class="fas fa-thumbs-up"></span>
+                <span class="d-none d-sm-block">Like</span>
+              </button>
+              <button class="btn btn-danger btn-sm"
+                      (click)="unlikePost(post._id, loggedInUser._id)"
+                      *ngIf="post.likedBy.indexOf(loggedInUser._id) > -1">
+                <span class="fas fa-thumbs-down"></span>
+                <span class="d-none d-sm-block">Unlike</span>
+              </button>
+            </div>
+
+            <div class="col-4 form-group text-center">
+              <button class="btn btn-info btn-sm"
+                      (click)="enableComment(post._id); comment='';"
+                      *ngIf="enableCommentSection.indexOf(post._id) < 0">
+                <span class="fas fa-comment"></span>
+                <span class="d-none d-sm-block">Comment</span>
+              </button>
+
+              <button class="btn btn-info btn-sm"
+                      (click)="disableComment(post._id); comment='';"
+                      *ngIf="enableCommentSection.indexOf(post._id) > -1">
+                <span class="fas fa-comment"></span>
+                <span class="d-none d-sm-block">Comment</span>
+              </button>
+            </div>
+
+            <div class="col-4 form-group text-center">
+              <button class="btn btn-warning btn-sm"
+                      data-toggle="modal"
+                      href="#sharePostModal"
+                      (click)="selectPost(post)">
+                <span class="fas fa-share"></span>
+                <span class="d-none d-sm-block">Share</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="section">
+            <div *ngIf="post.likedBy.indexOf(loggedInUser._id) > -1 && post.likes === 1">
+              <a href="#likedThisPost"
+                 (click)="peopleWhoLikedThePost(post.likedBy)"
+                 data-toggle="modal"
+                 class="people-like">You like this
+              </a><hr>
+            </div>
+            <div *ngIf="post.likedBy.indexOf(loggedInUser._id) > -1 && post.likes > 1">
+              <a href="#likedThisPost"
+                 (click)="peopleWhoLikedThePost(post.likedBy)"
+                 data-toggle="modal"
+                 class="people-like">You and {{post.likes - 1}} other like this
+              </a><hr>
+            </div>
+            <div *ngIf="post.likedBy.indexOf(loggedInUser._id) < 0 && post.likes > 0">
+              <a href="#likedThisPost"
+                 (click)="peopleWhoLikedThePost(post.likedBy)"
+                 data-toggle="modal"
+                 class="people-like">{{post.likes}} like this
+              </a><hr></div>
+
+            <div *ngIf="enableCommentSection.indexOf(post._id) < 0 && post.comments.length > 0"
+                 role="button">
+                  <span (click)="enableComment(post._id)">
+                    Show comments&nbsp;
+                    <div class="fas fa-comments"></div>
+                  </span>
+            </div>
+
+            <div *ngIf="enableCommentSection.indexOf(post._id) > -1 && post.comments.length > 0"
+                 role="button">
+                  <span (click)="disableComment(post._id)">
+                    Hide Comments&nbsp;
+                    <div class="fas fa-comments"></div>
+                    <br><br>
+                  </span>
+            </div>
+          </div>
+
+          <form class="form-horizontal"
+                name="submitCommentForm"
+                role="form"
+                novalidate
+                #submitCommentForm="ngForm">
+            <div class="form-group">
+              <div class="row"
+                   *ngIf="enableCommentSection.indexOf(post._id) > -1 && newComment.indexOf(post._id) > -1">
+                <div class="col-9 form-group">
+                      <textarea name="comment"
+                                rows="1"
+                                class="form-control submit-comment"
+                                [(ngModel)] ="comment"
+                                #submitCommentField = "ngModel"
+                                required>
+                      </textarea>
+                </div>
+                <div class="col-3 form-group">
+                  <button class="btn btn-info btn-sm"
+                          [disabled]="submitCommentForm.invalid"
+                          (click)="submitComment(post._id, loggedInUser.username, loggedInUser.firstName, loggedInUser.lastName, comment); comment='';">
+                    <span class="fas fa-paper-plane"></span>
+                    <span class="d-none d-md-block">Submit</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="enableCommentSection.indexOf(post._id) > -1">
+              <div *ngFor="let comment of post.comments">
+                <div class="media comment-box">
+                  <div class="media-left">
+                    <a routerLink="/profile/{{comment.username}}" target="_blank">
+                      <img class="img-responsive user-photo rounded-circle" src={{comment.image}}>
+                    </a>
+                  </div>
+                  <div class="media-body">
+                    <h4 class="media-heading"><a routerLink="/profile/{{comment.username}}" target="_blank" >{{comment.commentator}}</a></h4>
+                    <p>{{comment.comment}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="sharePostModal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Share this on your timeline ?</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <form class="form-horizontal modal-form"
+            name="sharePostForm"
+            role="form"
+            novalidate
+            #sharePostForm="ngForm">
+
+        <div class="form-group">
+
+          <div class="modal-body">
+
+            <input class="form-control"
+                   placeholder="Caption..."
+                   name = "shareCaption"
+                   [(ngModel)] ="selectedPost.postCaption"
+                   #sharedCaptionField = "ngModel"
+                   disabled
+                   required/><br>
+
+            <textarea *ngIf="selectedPost.type !== 'IMAGE'"
+                      rows="15"
+                      placeholder="Content..."
+                      name = "shareContent"
+                      [(ngModel)] ="selectedPost.postContent"
+                      #sharedContentField = "ngModel"
+                      class="form-control"
+                      disabled
+                      required></textarea>
+
+            <div *ngIf="selectedPost.type === 'IMAGE'">
+              <img [src]=selectedPost.postContent
+                   class="img-fluid shared-image">
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit"
+                    class="btn btn-default btn-warning"
+                    data-dismiss="modal"
+                    (click)="sharePost(selectedPost.postCaption, selectedPost.postContent, selectedPost.username, selectedPost.type)"
+                    [disabled]="sharePostForm.invalid">
+              Share
+            </button>
+            <button type="button"
+                    class="btn btn-default btn-danger"
+                    data-dismiss="modal">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="likedThisPost">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <div class="modal-title">People who like this post</div>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <div class="modal-body like-modal" >
+        <div class="people" *ngFor="let user of likedBy">
+          <div class="media">
+            <a routerLink="/profile/{{user.username}}" target="_blank">
+              <img class="small-image img-responsive rounded-circle" src="{{user.image}}">
+            </a>
+            <div class="media-body">
+              <a routerLink="/profile/{{user.username}}" target="_blank">
+                {{user.firstName}} {{user.lastName}}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="logoutModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <div class="modal-title">Are you sure wanna logout ?</div>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit"
+                class="btn btn-success"
+                data-dismiss="modal"
+                (click)="logout()">
+          Yes
+        </button>
+
+        <button type="button"
+                class="btn btn-danger"
+                data-dismiss="modal">
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+<app-header></app-header>
+<div *ngIf="loggedInUser">
+  <app-feed></app-feed>
+</div>
+<div *ngIf="!loggedInUser">
+  <app-landing-page></app-landing-page>
+</div>

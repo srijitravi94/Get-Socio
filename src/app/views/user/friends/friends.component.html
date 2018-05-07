@@ -1,0 +1,49 @@
+<app-header></app-header>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3">
+      <app-sidemenu></app-sidemenu>
+    </div>
+    <div class="col-sm-9 friend-list" *ngIf="friendsList.length > 0">
+      <ul class="list-group list-group-flush friends-list">
+        <li class="list-group-item" *ngFor="let user of friendsList">
+          <div class="float-left">
+            <a routerLink="/profile/{{user.username}}" target="_blank">
+              <img class="small-image img-responsive rounded-circle" src="{{user.image}}">
+            </a>
+            <a routerLink="/profile/{{user.username}}" target="_blank">
+              {{user.firstName}} &nbsp; {{user.lastName}}
+            </a>
+          </div>
+          <div class="float-right">
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-success">
+                <span class="fas fa-user"></span>&nbsp;
+                Friends
+              </button>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-success dropdown-toggle send-req" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop3" x-placement="bottom-start">
+                  <button class="btn dropdown-item"
+                          (click)="removeFriend(user?._id)">
+                    <span class="fas fa-user-times">&nbsp;</span>
+                    Remove Friend
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="col-sm-9 friend-list" *ngIf="friendsList.length === 0">
+      <div class="text-center">
+          <span class="fa-stack fa-4x">
+              <i class="fas fa-circle fa-stack-2x"></i>
+              <i class="fas fa-user fa-stack-1x fa-inverse"></i>
+          </span><br><br>
+        <h4>Add friends to see here</h4>
+      </div>
+    </div>
+  </div>
+</div>
