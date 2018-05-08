@@ -4,6 +4,7 @@ import { User } from "../../../models/user.model.client";
 import { ActivatedRoute, Router } from "@angular/router";
 import { UserService } from "../../../services/user.service.client";
 
+
 @Component({
   selector: 'app-pending-requests',
   templateUrl: './pending-requests.component.html',
@@ -45,13 +46,13 @@ export class PendingRequestsComponent implements OnInit {
         (user : User) => {
           let pendingRequests = [];
           if(user.username === this.loggedInUser.username) {
-            for(let f in this.loggedInUser.myFriends) {
-              if(!this.loggedInUser.myFriends[f].sentRequest && this.loggedInUser.myFriends[f].status === "PENDING") {
+            for(let f in user.myFriends) {
+              if(!user.myFriends[f].sentRequest && user.myFriends[f].status === "PENDING") {
                 this.userService
-                  .findUserById(this.loggedInUser.myFriends[f].userId)
+                  .findUserById(user.myFriends[f].userId)
                   .subscribe(
                     (pendingUser : User) => {
-                      pendingRequests.unshift(pendingUser);
+                      pendingRequests.push(pendingUser);
                     });
               }
             }

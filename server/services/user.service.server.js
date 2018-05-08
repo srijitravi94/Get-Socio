@@ -3,6 +3,7 @@ module.exports = function (app) {
   var userModel      = require("../models/user/user.model.server");
   var passport       = require('passport');
   var LocalStrategy  = require('passport-local').Strategy;
+  var bcrypt         = require("bcrypt-nodejs");
 
 
   passport.use(new LocalStrategy(localStrategy));
@@ -24,11 +25,24 @@ module.exports = function (app) {
   app.get("/api/getSocio/searchUser/:user", searchUser);
 
   function localStrategy(username, password, done) {
+
     userModel
-      .findUserByCredentials(username, password)
+      .findUserByUsername(username)
       .then(function (user) {
         if(user) {
-          return done(null, user);
+          if(bcrypt.compareSync(password, user.password)) {
+            userModel
+              .findUserByCredentials(username, user.password)
+              .then(function (user) {
+                if(user) {
+                  return done(null, user);
+                } else {
+                  return done(null, false);
+                }
+              });
+          } else {
+            return done(null, false);
+          }
         } else {
           return done(null, false);
         }
@@ -52,6 +66,8 @@ module.exports = function (app) {
 
   function register(req, res) {
     var newUser = req.body;
+
+    newUser.password = bcrypt.hashSync(newUser.password);
 
     userModel
       .register(newUser)
@@ -115,6 +131,8 @@ module.exports = function (app) {
   function updatePassword(req, res) {
     var username = req.params.username;
     var passwordField = req.body;
+
+    passwordField.newPassword = bcrypt.hashSync(passwordField.newPassword);
 
     userModel
       .updatePassword(username, passwordField.newPassword)
