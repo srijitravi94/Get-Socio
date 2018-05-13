@@ -9,7 +9,7 @@ var passport     = require('passport');
 
 app.use(cookieParser());
 app.use(session({
-  secret : "getSocio",
+  secret : process.env.SESSION_SECRET,
   resave: true,
   saveUninitialized: true
 }));
