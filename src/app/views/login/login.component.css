@@ -17,3 +17,25 @@
   border-color: #2c3e50 !important;
   box-shadow: none
 }
+
+.facebook,
+.facebook:hover,
+.facebook:active,
+.facebook:focus,
+.facebook:active:focus {
+  border-color: #3B5998 !important;
+  background-color: #3B5998 !important;
+}
+
+.twitter,
+.twitter:hover,
+.twitter:active,
+.twitter:focus,
+.twitter:active:focus {
+  border-color: #00aced !important;
+  background-color: #00aced !important;
+}
+
+a.facebook, a.twitter, a.google {
+  color: white !important;
+}

@@ -2,7 +2,7 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm-3">
-      <app-sidemenu></app-sidemenu>
+      <app-sidemenu (changeCallback)="sidebarChange($event)"></app-sidemenu>
     </div>
     <div class="col-sm-9 pending-req" *ngIf="pendingRequests.length > 0">
       <ul class="list-group list-group-flush pending-friend-list">

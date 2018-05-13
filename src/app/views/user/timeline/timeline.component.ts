@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../../services/user.service.client';
 import { PostService } from '../../../services/post.service.client';
 import { AuthService } from "../../../services/auth.service.client";
+import { ToastrService } from 'ngx-toastr';
 import { User } from "../../../models/user.model.client";
 import { Post } from "../../../models/post.model.client";
 
@@ -35,7 +36,8 @@ export class TimelineComponent implements OnInit {
     private route : ActivatedRoute,
     private userService : UserService,
     private postService : PostService,
-    private authService : AuthService
+    private authService : AuthService,
+    private toastrService : ToastrService,
   ) { }
 
   ngOnInit() {
@@ -108,6 +110,9 @@ export class TimelineComponent implements OnInit {
       .subscribe(
         (post : Post) => {
           this.getPostsForUser(this.username);
+          this.toastrService.success("You shared a new post","AWESOME", {
+            closeButton : true
+          });
         });
   }
 
@@ -198,6 +203,9 @@ export class TimelineComponent implements OnInit {
       .subscribe(
         (post : Post) => {
           this.getPostsForUser(this.username);
+          this.toastrService.success("You shared a post from " + this.user.username , "AWESOME", {
+            closeButton : true
+          });
         });
   }
 
@@ -231,6 +239,9 @@ export class TimelineComponent implements OnInit {
           this.getPostsForUser(this.username);
           this.selectedImage = '';
           this.imageCaption = '';
+          this.toastrService.success("You shared an image post", "AWESOME", {
+            closeButton : true
+          });
         });
   }
 

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../services/user.service.client';
+import { ToastrService } from 'ngx-toastr';
 import { User } from "../../../models/user.model.client";
 import { AuthService } from "../../../services/auth.service.client";
 
@@ -20,6 +21,8 @@ export class SidemenuComponent implements OnInit {
   friends           : Boolean;
   fileToUpload      : File;
 
+  @Output() changeCallback : EventEmitter<() => void > = new EventEmitter();
+
   passwordField = {
     newPassword       : "",
     verifyNewPassword : "",
@@ -31,7 +34,8 @@ export class SidemenuComponent implements OnInit {
     private route : ActivatedRoute,
     private router : Router,
     private userService : UserService,
-    private authService : AuthService
+    private authService : AuthService,
+    private toastrService : ToastrService
   ) { }
 
   ngOnInit() {
@@ -39,6 +43,12 @@ export class SidemenuComponent implements OnInit {
     this.findUserByUsername();
     this.checkFriendRequestStatus();
     this.checkPendingRequests(this.username);
+
+    if(this.changeCallback) {
+      this.changeCallback.emit(()=> {
+        this.checkPendingRequests(this.loggedInUser.username);
+      });
+    }
   }
 
   findUserByUsername() {
@@ -63,13 +73,17 @@ export class SidemenuComponent implements OnInit {
       .updateProfile(user, user.username)
       .subscribe(
         (user : User) => {
-          this.successMessage = "Profile updated successfully";
-          window.location.reload();
-          console.log(this.successMessage);
+          this.toastrService.success("Profile updated successfully", "SUCCESS", {
+            closeButton : true
+          });
+          setTimeout(function () {
+            window.location.reload();
+          }, 3000);
         },
         (err) => {
-          this.errorMessage = "Unable to update profile. Please try again !";
-          console.log(this.errorMessage);
+          this.toastrService.error("Unable to update tour profile. Please try again !", "ERROR", {
+            closeButton : true
+          });
         });
   }
 
@@ -78,12 +92,14 @@ export class SidemenuComponent implements OnInit {
       .updatePassword(passwordField, this.user.username)
       .subscribe(
         (user : User) => {
-          this.successMessage = "Password updated successfully";
-          console.log(this.successMessage);
+          this.toastrService.success("Password updated successfully", "SUCCESS", {
+            closeButton : true
+          });
         },
         (err) => {
-          this.errorMessage = "Unable to update password. Please try again !";
-          console.log(this.errorMessage);
+          this.toastrService.error("Unable to update password. Please try again !", "ERROR", {
+            closeButton : true
+          });
         });
   }
 

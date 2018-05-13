@@ -45,10 +45,10 @@ export class FriendsComponent implements OnInit {
         (user : User) => {
           let friendsList = [];
           if(user.username === this.loggedInUser.username) {
-            for(let f in this.loggedInUser.myFriends) {
-              if(this.loggedInUser.myFriends[f].status === "FRIENDS") {
+            for(let f in user.myFriends) {
+              if(user.myFriends[f].status === "FRIENDS") {
                 this.userService
-                  .findUserById(this.loggedInUser.myFriends[f].userId)
+                  .findUserById(user.myFriends[f].userId)
                   .subscribe(
                     (friends : User) => {
                       friendsList.push(friends);
@@ -65,7 +65,7 @@ export class FriendsComponent implements OnInit {
       .deleteFriendRequest(this.loggedInUser._id, userId)
       .subscribe(
         (user : User) => {
-          window.location.reload();
+          this.friendList(this.loggedInUser.username)
         });
   }
 

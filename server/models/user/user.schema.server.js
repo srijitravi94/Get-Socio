@@ -8,6 +8,17 @@ var userSchema = mongoose.Schema({
   phone        : {type : String, default: ""},
   password     : String,
   image        : {type : String, default: "/assets/default.png"},
+
+  facebook: {
+    id:    String,
+    token: String
+  },
+
+  twitter: {
+    id:    String,
+    token: String
+  },
+
   myFriends    : [{
     userId      : String,
     status      : {type: String, default : 'NOTAFRIEND', enum : ['NOTAFRIEND', 'PENDING','FRIENDS']},

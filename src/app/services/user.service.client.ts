@@ -130,4 +130,5 @@ export class UserService {
       .replace('{user}', user);
     return this.http.get<User>(url);
   }
+
 }

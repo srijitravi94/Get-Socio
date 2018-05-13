@@ -15,6 +15,7 @@ userModel.checkFriendRequestStatus = checkFriendRequestStatus;
 userModel.acceptFriendRequest = acceptFriendRequest;
 userModel.deleteFriendRequest = deleteFriendRequest;
 userModel.searchUser = searchUser;
+userModel.findUserByTwitterId = findUserByTwitterId;
 
 module.exports = userModel;
 
@@ -111,4 +112,9 @@ function searchUser(user) {
         {"lastName" : {$regex : ".*" + user.toUpperCase() + ".*"}}
       ]
     });
+}
+
+function findUserByTwitterId(twitterId) {
+  return userModel
+    .findOne({'twitter.id': twitterId});
 }

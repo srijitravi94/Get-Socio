@@ -4,6 +4,7 @@ import { UserService } from '../../services/user.service.client';
 import { PostService } from '../../services/post.service.client';
 import { User } from "../../models/user.model.client";
 import { AuthService } from "../../services/auth.service.client";
+import { ToastrService } from "ngx-toastr";
 import { Post } from "../../models/post.model.client";
 import { FormControl } from "@angular/forms";
 
@@ -34,7 +35,8 @@ export class FeedComponent implements OnInit {
   constructor(private router : Router,
               private userService : UserService,
               private postService : PostService,
-              private authService : AuthService) {
+              private authService : AuthService,
+              private toastrService : ToastrService) {
     this.searchUser
       .valueChanges
       .debounceTime(400)
@@ -88,25 +90,6 @@ export class FeedComponent implements OnInit {
 
   selectPost(post) {
     this.selectedPost = JSON.parse(JSON.stringify(post));
-  }
-
-  updatePost(post) {
-    post.image = post.image.split('/')[post.image.length-1];
-    this.postService
-      .updatePost(post)
-      .subscribe(
-        (post : Post) => {
-          this.getAllPosts();
-        });
-  }
-
-  deletePost(post) {
-    this.postService
-      .deletePost(post._id, this.loggedInUser._id)
-      .subscribe(
-        (post : Post) => {
-          this.getAllPosts();
-        });
   }
 
   likePost(postId, userId) {
@@ -173,6 +156,9 @@ export class FeedComponent implements OnInit {
       .subscribe(
         (post : Post) => {
           this.getAllPosts();
+          this.toastrService.success("You shared a post from " + username , "AWESOME", {
+            closeButton : true
+          });
         });
   }
 

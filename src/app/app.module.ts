@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatInputModule } from '@angular/material';
+import { ToastrModule } from 'ngx-toastr';
 
 
 // Components
@@ -17,7 +18,7 @@ import { PendingRequestsComponent } from './views/user/pending-requests/pending-
 import { HeaderComponent } from './views/header/header.component';
 import { FriendsComponent } from './views/user/friends/friends.component';
 import { FeedComponent } from './views/feed/feed.component';
-
+import { LandingPageComponent } from './views/landing-page/landing-page.component';
 
 
 // Services
@@ -28,7 +29,6 @@ import { RedirectService } from "./services/redirect.service.client";
 
 
 import { routing } from "./app.routing";
-import { LandingPageComponent } from './views/landing-page/landing-page.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +52,8 @@ import { LandingPageComponent } from './views/landing-page/landing-page.componen
     ReactiveFormsModule,
     MatAutocompleteModule,
     BrowserAnimationsModule,
-    FormsModule
+    FormsModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     UserService,

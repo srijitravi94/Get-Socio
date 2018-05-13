@@ -3,6 +3,7 @@ import { AuthService } from "../../../services/auth.service.client";
 import { User } from "../../../models/user.model.client";
 import { ActivatedRoute, Router } from "@angular/router";
 import { UserService } from "../../../services/user.service.client";
+import { ToastrService } from  'ngx-toastr';
 
 
 @Component({
@@ -14,13 +15,15 @@ export class PendingRequestsComponent implements OnInit {
 
   username          : String;
   loggedInUser      : User;
+  sidebarChangeCallback: () => void;
 
   pendingRequests = [];
 
   constructor(private route : ActivatedRoute,
               private router : Router,
               private userService : UserService,
-              private authService : AuthService) { }
+              private authService : AuthService,
+              private toastrService : ToastrService) { }
 
   ngOnInit() {
     this.loggedInUser = this.authService.getLoggedInUser();
@@ -66,7 +69,18 @@ export class PendingRequestsComponent implements OnInit {
       .acceptFriendRequest(this.loggedInUser._id, userId)
       .subscribe(
         (user : User) => {
-          window.location.reload();
+          this.checkPendingRequests(this.loggedInUser.username);
+          if(this.sidebarChangeCallback) {
+            this.sidebarChangeCallback();
+          }
+          this.userService
+            .findUserById(userId)
+            .subscribe(
+              (friendUser : User) => {
+                this.toastrService.info("You are now friends with " + friendUser.firstName, "AWESOME", {
+                  closeButton : true
+                });
+              });
         });
   }
 
@@ -75,7 +89,14 @@ export class PendingRequestsComponent implements OnInit {
       .deleteFriendRequest(this.loggedInUser._id, userId)
       .subscribe(
         (user : User) => {
-          window.location.reload();
+          this.checkPendingRequests(this.loggedInUser.username);
+          if(this.sidebarChangeCallback) {
+            this.sidebarChangeCallback();
+          }
         });
+  }
+
+  sidebarChange(event) {
+    this.sidebarChangeCallback = event;
   }
 }

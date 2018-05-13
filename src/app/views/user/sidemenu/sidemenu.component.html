@@ -1,7 +1,7 @@
 <div class="col-sm-3 fixed text-center sidemenu">
   <div class="profile-pic">
     <img src={{user?.image}}
-         class="img-fluid">
+         class="img-fluid profile-picture">
     <div class="centered" *ngIf="user?.username === loggedInUser?.username">
       <label for="fileUpload">change picture</label>
       <input type="file"
@@ -168,7 +168,7 @@
                       <span class="input-group-addon">
                           <i class="fa fa-envelope"></i>
                       </span>
-              <input type="text"
+              <input type="email"
                      id="email"
                      class="form-control"
                      name = "emailField"
