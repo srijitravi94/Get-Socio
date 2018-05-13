@@ -110,7 +110,7 @@ export class TimelineComponent implements OnInit {
       .subscribe(
         (post : Post) => {
           this.getPostsForUser(this.username);
-          this.toastrService.success("You shared a new post","AWESOME", {
+          this.toastrService.info("You shared a new post","AWESOME", {
             closeButton : true
           });
         });
@@ -127,6 +127,9 @@ export class TimelineComponent implements OnInit {
       .subscribe(
         (post : Post) => {
           this.getPostsForUser(this.username);
+          this.toastrService.info("You have updated the post" , "", {
+            closeButton : true
+          });
         });
   }
 
@@ -136,6 +139,9 @@ export class TimelineComponent implements OnInit {
       .subscribe(
         (post : Post) => {
           this.getPostsForUser(this.username);
+          this.toastrService.warning("You have deleted a post" , "", {
+            closeButton : true
+          });
         });
   }
 
@@ -203,7 +209,7 @@ export class TimelineComponent implements OnInit {
       .subscribe(
         (post : Post) => {
           this.getPostsForUser(this.username);
-          this.toastrService.success("You shared a post from " + this.user.username , "AWESOME", {
+          this.toastrService.info("You shared a post from " + this.user.username , "AWESOME", {
             closeButton : true
           });
         });
@@ -239,7 +245,7 @@ export class TimelineComponent implements OnInit {
           this.getPostsForUser(this.username);
           this.selectedImage = '';
           this.imageCaption = '';
-          this.toastrService.success("You shared an image post", "AWESOME", {
+          this.toastrService.info("You shared an image post", "AWESOME", {
             closeButton : true
           });
         });

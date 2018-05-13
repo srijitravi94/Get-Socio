@@ -3,6 +3,7 @@ import { AuthService } from "../../../services/auth.service.client";
 import { User } from "../../../models/user.model.client";
 import { ActivatedRoute, Router } from "@angular/router";
 import { UserService } from "../../../services/user.service.client";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-friends',
@@ -19,7 +20,8 @@ export class FriendsComponent implements OnInit {
   constructor(private route : ActivatedRoute,
               private router : Router,
               private userService : UserService,
-              private authService : AuthService) { }
+              private authService : AuthService,
+              private toastrService : ToastrService) { }
 
   ngOnInit() {
     this.loggedInUser = this.authService.getLoggedInUser();
@@ -65,7 +67,15 @@ export class FriendsComponent implements OnInit {
       .deleteFriendRequest(this.loggedInUser._id, userId)
       .subscribe(
         (user : User) => {
-          this.friendList(this.loggedInUser.username)
+          this.friendList(this.loggedInUser.username);
+          this.userService
+            .findUserById(userId)
+            .subscribe(
+              (friendUser : User) => {
+                this.toastrService.info("You have unfriended " + friendUser.firstName, "", {
+                  closeButton : true
+                });
+              });
         });
   }
 

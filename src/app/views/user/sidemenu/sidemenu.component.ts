@@ -14,8 +14,6 @@ export class SidemenuComponent implements OnInit {
   username          : String;
   user              : User;
   loggedInUser      : User;
-  successMessage    : String;
-  errorMessage      : String;
   pendingRequests   : String[];
   pendingRequest    : Boolean;
   friends           : Boolean;
@@ -27,6 +25,7 @@ export class SidemenuComponent implements OnInit {
     newPassword       : "",
     verifyNewPassword : "",
   };
+  selectedUser = "";
 
   friendsList = [];
 
@@ -67,18 +66,23 @@ export class SidemenuComponent implements OnInit {
     this.findUserByUsername();
   }
 
+  selectUser() {
+    this.selectedUser = JSON.parse(JSON.stringify(this.user));
+  }
+
   updateProfile(user) {
     user.image = user.image.split('/')[user.image.length-1];
     this.userService
       .updateProfile(user, user.username)
       .subscribe(
         (user : User) => {
+          this.findUserByUsername();
           this.toastrService.success("Profile updated successfully", "SUCCESS", {
             closeButton : true
           });
           setTimeout(function () {
             window.location.reload();
-          }, 3000);
+          }, 2000);
         },
         (err) => {
           this.toastrService.error("Unable to update tour profile. Please try again !", "ERROR", {

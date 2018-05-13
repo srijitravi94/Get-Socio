@@ -8,7 +8,11 @@ const app        = express();
 var passport     = require('passport');
 
 app.use(cookieParser());
-app.use(session({ secret : "getSocio"}));
+app.use(session({
+  secret : "getSocio",
+  resave: true,
+  saveUninitialized: true
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
