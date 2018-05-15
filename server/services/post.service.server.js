@@ -2,8 +2,16 @@ module.exports = function (app) {
 
   var postModel = require("../models/post/post.model.server");
   var multer    = require('multer');
+  var storage   = multer.diskStorage({
+    destination : function (req, file, cb) {
+      cb(null, __dirname +'/../../src/assets');
+    },
+    filename : function (req, file, cb) {
+      cb(null, Date.now() + file.originalname);
+    }
+  });
 
-  var postImage = multer({ dest: __dirname + '/../../src/assets' });
+  var postImage = multer({ storage : storage });
 
   app.post("/api/getSocio/post/createPost", createPost);
   app.get("/api/getSocio/post/getPosts/:postId", findPostById);

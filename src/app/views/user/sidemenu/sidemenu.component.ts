@@ -193,7 +193,12 @@ export class SidemenuComponent implements OnInit {
         .subscribe(
           (user : User) => {
             this.findUserByUsername();
-            window.location.reload();
+            this.toastrService.success("Profile picture updated successfully", "SUCCESS", {
+              closeButton : true
+            });
+            setTimeout(function () {
+              window.location.reload();
+            }, 2000);
           });
   }
 

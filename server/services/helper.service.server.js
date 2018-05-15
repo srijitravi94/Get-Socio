@@ -2,8 +2,16 @@ module.exports = function (app) {
   var userModel  = require("../models/user/user.model.server");
   var postModel  = require("../models/post/post.model.server");
   var multer     = require('multer');
+  var storage   = multer.diskStorage({
+    destination : function (req, file, cb) {
+      cb(null, __dirname +'/../../src/assets');
+    },
+    filename : function (req, file, cb) {
+      cb(null, Date.now() + file.originalname);
+    }
+  });
 
-  var profilePicture = multer({ dest: __dirname + '/../../src/assets' });
+  var profilePicture = multer({ storage : storage });
 
   app.put("/api/getSocio/user/updateProfile/:username", updateProfile);
   app.post("/api/getSocio/user/upload/:userId",  profilePicture.single('myFile'), uploadImage);

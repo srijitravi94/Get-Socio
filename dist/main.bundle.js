@@ -1706,7 +1706,12 @@ var SidemenuComponent = /** @class */ (function () {
             .uploadProfilePicture(this.fileToUpload, userId)
             .subscribe(function (user) {
             _this.findUserByUsername();
-            window.location.reload();
+            _this.toastrService.success("Profile picture updated successfully", "SUCCESS", {
+                closeButton: true
+            });
+            setTimeout(function () {
+                window.location.reload();
+            }, 2000);
         });
     };
     SidemenuComponent.prototype.friendsOfUser = function (friendsList) {
