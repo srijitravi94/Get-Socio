@@ -12,10 +12,10 @@ import { RedirectService } from "./services/redirect.service.client";
 const appRoutes : Routes = [
   { path : '' , component: HomeComponent},
   { path : 'login' , component: LoginComponent, canActivate : [RedirectService]},
-  { path : 'register' , component:RegisterComponent, canActivate : [RedirectService] },
-  { path : 'profile/:username' , component:TimelineComponent, canActivate : [AuthService]},
-  { path : 'profile/:username/pending-requests' , component:PendingRequestsComponent, canActivate : [AuthService] },
-  { path : 'profile/:username/friends' , component:FriendsComponent, canActivate : [AuthService] }
+  { path : 'register' , component: RegisterComponent, canActivate : [RedirectService] },
+  { path : 'profile/:username' , component: TimelineComponent, canActivate : [AuthService]},
+  { path : 'profile/:username/pending-requests' , component: PendingRequestsComponent, canActivate : [AuthService] },
+  { path : 'profile/:username/friends' , component: FriendsComponent, canActivate : [AuthService] },
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);

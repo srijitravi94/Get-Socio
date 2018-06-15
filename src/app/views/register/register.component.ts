@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service.client';
 import { AuthService } from "../../services/auth.service.client";
 import { User } from "../../models/user.model.client";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -15,13 +16,13 @@ export class RegisterComponent implements OnInit {
 
   constructor(private userService : UserService,
               private authService : AuthService,
+              private toastrService : ToastrService,
               private router : Router) { }
 
   ngOnInit() {
   }
 
   register(firstName, lastName, username, password) {
-
     this.userService
       .findUserByUsername(username)
       .subscribe(
@@ -44,6 +45,9 @@ export class RegisterComponent implements OnInit {
               (user : User) => {
                 this.authService.loggedInUser = user;
                 this.router.navigate(['/profile', user.username]);
+                this.toastrService.success("Registration successful" , "", {
+                  closeButton : true
+                });
               });
         });
   }

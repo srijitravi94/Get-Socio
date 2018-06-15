@@ -19,6 +19,8 @@ export class SidemenuComponent implements OnInit {
   friends           : Boolean;
   fileToUpload      : File;
 
+  message:string;
+
   @Output() changeCallback : EventEmitter<() => void > = new EventEmitter();
 
   passwordField = {
@@ -41,7 +43,7 @@ export class SidemenuComponent implements OnInit {
     this.loggedInUser = this.authService.getLoggedInUser();
     this.findUserByUsername();
     this.checkFriendRequestStatus();
-    this.checkPendingRequests(this.username);
+    this.checkPendingRequests(this.loggedInUser.username);
 
     if(this.changeCallback) {
       this.changeCallback.emit(()=> {
@@ -85,7 +87,7 @@ export class SidemenuComponent implements OnInit {
           }, 2000);
         },
         (err) => {
-          this.toastrService.error("Unable to update tour profile. Please try again !", "ERROR", {
+          this.toastrService.error("Unable to update your profile. Please try again !", "ERROR", {
             closeButton : true
           });
         });
@@ -109,11 +111,14 @@ export class SidemenuComponent implements OnInit {
 
   logout() {
     this.userService
-      .logout()
+      .logout(this.loggedInUser)
       .subscribe(
         (res) => {
           localStorage.removeItem('loggedInUser');
           this.router.navigate(['/login']);
+          this.toastrService.warning("User Successfully Logged Out", "", {
+            closeButton : true
+          });
         });
   }
 
@@ -216,5 +221,4 @@ export class SidemenuComponent implements OnInit {
     }
     this.friendsList = friends;
   }
-
 }

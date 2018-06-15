@@ -42,7 +42,7 @@ import { routing } from "./app.routing";
     HeaderComponent,
     FriendsComponent,
     FeedComponent,
-    LandingPageComponent,
+    LandingPageComponent
   ],
   imports: [
     BrowserModule,

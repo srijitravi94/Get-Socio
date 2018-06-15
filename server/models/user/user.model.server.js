@@ -6,6 +6,7 @@ userModel.register = register;
 userModel.findUserByCredentials = findUserByCredentials;
 userModel.findUserByUsername = findUserByUsername;
 userModel.findUserById = findUserById;
+userModel.findAllUsers = findAllUsers;
 userModel.updateProfile = updateProfile;
 userModel.updatePassword = updatePassword;
 userModel.addPostsForUser = addPostsForUser;
@@ -15,7 +16,6 @@ userModel.checkFriendRequestStatus = checkFriendRequestStatus;
 userModel.acceptFriendRequest = acceptFriendRequest;
 userModel.deleteFriendRequest = deleteFriendRequest;
 userModel.searchUser = searchUser;
-userModel.findUserByTwitterId = findUserByTwitterId;
 
 module.exports = userModel;
 
@@ -37,6 +37,11 @@ function findUserByUsername(username) {
 function findUserById(userId) {
   return userModel
     .findOne({_id : userId});
+}
+
+function findAllUsers() {
+  return userModel
+    .find();
 }
 
 function updateProfile(user, username) {
@@ -112,9 +117,4 @@ function searchUser(user) {
         {"lastName" : {$regex : ".*" + user.toUpperCase() + ".*"}}
       ]
     });
-}
-
-function findUserByTwitterId(twitterId) {
-  return userModel
-    .findOne({'twitter.id': twitterId});
 }

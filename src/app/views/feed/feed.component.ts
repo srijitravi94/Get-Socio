@@ -189,11 +189,14 @@ export class FeedComponent implements OnInit {
 
   logout() {
     this.userService
-      .logout()
+      .logout(this.loggedInUser)
       .subscribe(
         (res) => {
           localStorage.removeItem('loggedInUser');
           this.router.navigate(['/login']);
+          this.toastrService.warning("User Successfully Logged Out", "", {
+            closeButton : true
+          });
         });
   }
 }

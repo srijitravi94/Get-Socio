@@ -84,7 +84,8 @@ var AppConstants = /** @class */ (function () {
     function AppConstants() {
     }
     AppConstants.ApiEndPoint = {
-        baseUrl: __WEBPACK_IMPORTED_MODULE_0__environments_environment__["a" /* environment */].baseUrl + 'api/getSocio/'
+        baseUrl: __WEBPACK_IMPORTED_MODULE_0__environments_environment__["a" /* environment */].baseUrl + 'api/getSocio/',
+        socketUrl: __WEBPACK_IMPORTED_MODULE_0__environments_environment__["a" /* environment */].baseUrl
     };
     return AppConstants;
 }());
@@ -168,7 +169,7 @@ var AppModule = /** @class */ (function () {
                 __WEBPACK_IMPORTED_MODULE_14__views_header_header_component__["a" /* HeaderComponent */],
                 __WEBPACK_IMPORTED_MODULE_15__views_user_friends_friends_component__["a" /* FriendsComponent */],
                 __WEBPACK_IMPORTED_MODULE_16__views_feed_feed_component__["a" /* FeedComponent */],
-                __WEBPACK_IMPORTED_MODULE_17__views_landing_page_landing_page_component__["a" /* LandingPageComponent */],
+                __WEBPACK_IMPORTED_MODULE_17__views_landing_page_landing_page_component__["a" /* LandingPageComponent */]
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -226,7 +227,7 @@ var appRoutes = [
     { path: 'register', component: __WEBPACK_IMPORTED_MODULE_2__views_register_register_component__["a" /* RegisterComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_8__services_redirect_service_client__["a" /* RedirectService */]] },
     { path: 'profile/:username', component: __WEBPACK_IMPORTED_MODULE_4__views_user_timeline_timeline_component__["a" /* TimelineComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__services_auth_service_client__["a" /* AuthService */]] },
     { path: 'profile/:username/pending-requests', component: __WEBPACK_IMPORTED_MODULE_5__views_user_pending_requests_pending_requests_component__["a" /* PendingRequestsComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__services_auth_service_client__["a" /* AuthService */]] },
-    { path: 'profile/:username/friends', component: __WEBPACK_IMPORTED_MODULE_6__views_user_friends_friends_component__["a" /* FriendsComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__services_auth_service_client__["a" /* AuthService */]] }
+    { path: 'profile/:username/friends', component: __WEBPACK_IMPORTED_MODULE_6__views_user_friends_friends_component__["a" /* FriendsComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__services_auth_service_client__["a" /* AuthService */]] },
 ];
 var routing = __WEBPACK_IMPORTED_MODULE_0__angular_router__["c" /* RouterModule */].forRoot(appRoutes);
 
@@ -538,9 +539,9 @@ var UserService = /** @class */ (function () {
         };
         return this.http.post(url, credentials, { withCredentials: true });
     };
-    UserService.prototype.logout = function () {
+    UserService.prototype.logout = function (user) {
         var url = this.apiEndPoint.logout;
-        return this.http.post(url, '', { withCredentials: true });
+        return this.http.post(url, user, { withCredentials: true });
     };
     UserService.prototype.loggedIn = function () {
         var url = this.apiEndPoint.loggedIn;
@@ -817,10 +818,13 @@ var FeedComponent = /** @class */ (function () {
     FeedComponent.prototype.logout = function () {
         var _this = this;
         this.userService
-            .logout()
+            .logout(this.loggedInUser)
             .subscribe(function (res) {
             localStorage.removeItem('loggedInUser');
             _this.router.navigate(['/login']);
+            _this.toastrService.warning("User Successfully Logged Out", "", {
+                closeButton: true
+            });
         });
     };
     FeedComponent = __decorate([
@@ -1076,7 +1080,7 @@ module.exports = "<app-header></app-header>\n<div class=\"login text-center\">\n
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/esm5/router.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_user_service_client__ = __webpack_require__("../../../../../src/app/services/user.service.client.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_auth_service_client__ = __webpack_require__("../../../../../src/app/services/auth.service.client.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_constants__ = __webpack_require__("../../../../../src/app/app.constants.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ngx_toastr__ = __webpack_require__("../../../../ngx-toastr/fesm5/ngx-toastr.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1092,13 +1096,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var LoginComponent = /** @class */ (function () {
-    function LoginComponent(userService, authService, router) {
+    function LoginComponent(userService, authService, toastrService, router) {
         this.userService = userService;
         this.authService = authService;
+        this.toastrService = toastrService;
         this.router = router;
     }
     LoginComponent.prototype.ngOnInit = function () {
-        this.loginWithFacebook = __WEBPACK_IMPORTED_MODULE_4__app_constants__["a" /* AppConstants */].ApiEndPoint.baseUrl + 'auth/facebook';
     };
     LoginComponent.prototype.login = function (username, password) {
         var _this = this;
@@ -1107,6 +1111,9 @@ var LoginComponent = /** @class */ (function () {
             .subscribe(function (user) {
             _this.authService.loggedInUser = user;
             _this.router.navigate(['/profile', user.username]);
+            _this.toastrService.success("Successfully Logged In", "", {
+                closeButton: true
+            });
         }, function (err) {
             _this.errorMessage = "Username and password doesn't match. Try again";
         });
@@ -1119,6 +1126,7 @@ var LoginComponent = /** @class */ (function () {
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__services_user_service_client__["a" /* UserService */],
             __WEBPACK_IMPORTED_MODULE_3__services_auth_service_client__["a" /* AuthService */],
+            __WEBPACK_IMPORTED_MODULE_4_ngx_toastr__["b" /* ToastrService */],
             __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]])
     ], LoginComponent);
     return LoginComponent;
@@ -1162,6 +1170,7 @@ module.exports = "<app-header></app-header>\n<div class=\"register text-center\"
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/esm5/router.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_user_service_client__ = __webpack_require__("../../../../../src/app/services/user.service.client.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_auth_service_client__ = __webpack_require__("../../../../../src/app/services/auth.service.client.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ngx_toastr__ = __webpack_require__("../../../../ngx-toastr/fesm5/ngx-toastr.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1175,10 +1184,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var RegisterComponent = /** @class */ (function () {
-    function RegisterComponent(userService, authService, router) {
+    function RegisterComponent(userService, authService, toastrService, router) {
         this.userService = userService;
         this.authService = authService;
+        this.toastrService = toastrService;
         this.router = router;
     }
     RegisterComponent.prototype.ngOnInit = function () {
@@ -1203,6 +1214,9 @@ var RegisterComponent = /** @class */ (function () {
                 .subscribe(function (user) {
                 _this.authService.loggedInUser = user;
                 _this.router.navigate(['/profile', user.username]);
+                _this.toastrService.success("Registration successful", "", {
+                    closeButton: true
+                });
             });
         });
     };
@@ -1214,6 +1228,7 @@ var RegisterComponent = /** @class */ (function () {
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__services_user_service_client__["a" /* UserService */],
             __WEBPACK_IMPORTED_MODULE_3__services_auth_service_client__["a" /* AuthService */],
+            __WEBPACK_IMPORTED_MODULE_4_ngx_toastr__["b" /* ToastrService */],
             __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]])
     ], RegisterComponent);
     return RegisterComponent;
@@ -1567,7 +1582,7 @@ var SidemenuComponent = /** @class */ (function () {
         this.loggedInUser = this.authService.getLoggedInUser();
         this.findUserByUsername();
         this.checkFriendRequestStatus();
-        this.checkPendingRequests(this.username);
+        this.checkPendingRequests(this.loggedInUser.username);
         if (this.changeCallback) {
             this.changeCallback.emit(function () {
                 _this.checkPendingRequests(_this.loggedInUser.username);
@@ -1606,7 +1621,7 @@ var SidemenuComponent = /** @class */ (function () {
                 window.location.reload();
             }, 2000);
         }, function (err) {
-            _this.toastrService.error("Unable to update tour profile. Please try again !", "ERROR", {
+            _this.toastrService.error("Unable to update your profile. Please try again !", "ERROR", {
                 closeButton: true
             });
         });
@@ -1628,10 +1643,13 @@ var SidemenuComponent = /** @class */ (function () {
     SidemenuComponent.prototype.logout = function () {
         var _this = this;
         this.userService
-            .logout()
+            .logout(this.loggedInUser)
             .subscribe(function (res) {
             localStorage.removeItem('loggedInUser');
             _this.router.navigate(['/login']);
+            _this.toastrService.warning("User Successfully Logged Out", "", {
+                closeButton: true
+            });
         });
     };
     SidemenuComponent.prototype.sendRequest = function (userId) {

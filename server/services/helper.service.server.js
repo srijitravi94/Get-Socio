@@ -2,6 +2,7 @@ module.exports = function (app) {
   var userModel  = require("../models/user/user.model.server");
   var postModel  = require("../models/post/post.model.server");
   var multer     = require('multer');
+
   var storage   = multer.diskStorage({
     destination : function (req, file, cb) {
       cb(null, __dirname +'/../../src/assets');

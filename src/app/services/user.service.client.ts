@@ -55,9 +55,9 @@ export class UserService {
     return this.http.post<User>(url, credentials, { withCredentials: true });
   }
 
-  logout() {
+  logout(user) {
     const url = this.apiEndPoint.logout;
-    return this.http.post<User>(url, '', { withCredentials: true });
+    return this.http.post<User>(url, user, { withCredentials: true });
   }
 
   loggedIn() {
